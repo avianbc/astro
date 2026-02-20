@@ -3,21 +3,34 @@ import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Main from "@/layouts/Main.astro";
 import ReviewCard from "@/components/ReviewCard.astro";
 import getSortedReviews from "@/utils/getSortedReviews";
 import { SITE } from "@/config";
 
-const reviews = await getCollection("reviews");
-const sortedReviews = getSortedReviews(reviews);
+const allReviews = await getCollection("reviews");
+const sortedReviews = getSortedReviews(allReviews);
 ---
 
 <Layout title={`Reviews | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Reviews" pageDesc="All album reviews, sorted by date.">
-    <ul>
-      {sortedReviews.map(review => <ReviewCard {...review} />)}
-    </ul>
-  </Main>
+  <main id="main-content" class="app-layout pb-12">
+    <div class="border-b border-border pb-6 pt-8">
+      <h1 class="font-display text-3xl font-bold uppercase tracking-wide sm:text-4xl">Reviews</h1>
+      <p class="mt-2 font-body text-foreground/60">
+        All album reviews, sorted by date. {sortedReviews.length} total.
+      </p>
+    </div>
+    {
+      sortedReviews.length > 0 ? (
+        <ul class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
+          {sortedReviews.map(review => (
+            <ReviewCard {...review} />
+          ))}
+        </ul>
+      ) : (
+        <p class="mt-8 font-body text-foreground/60">No reviews yet.</p>
+      )
+    }
+  </main>
   <Footer />
 </Layout>
