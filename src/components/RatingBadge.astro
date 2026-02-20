@@ -1,0 +1,41 @@
+---
+type Props = {
+  rating: number;
+  size?: "sm" | "lg";
+};
+
+const { rating, size = "sm" } = Astro.props;
+
+function getRatingColor(r: number): string {
+  if (r <= 3) return "bg-red-600";
+  if (r <= 5) return "bg-orange-600";
+  if (r <= 7) return "bg-amber-600";
+  if (r <= 9) return "bg-green-600";
+  return "bg-yellow-500";
+}
+
+function getRatingLabel(r: number): string {
+  if (r <= 3) return "Bad";
+  if (r <= 5) return "Below Average";
+  if (r <= 7) return "Good";
+  if (r <= 9) return "Great";
+  return "Essential";
+}
+
+const colorClass = getRatingColor(rating);
+const label = getRatingLabel(rating);
+const isEssential = rating === 10;
+---
+
+<div
+  class:list={[
+    "flex items-center justify-center font-mono font-bold text-white leading-none select-none",
+    colorClass,
+    size === "lg" ? "w-24 h-24 text-5xl sm:w-28 sm:h-28 sm:text-6xl" : "w-10 h-10 text-xl",
+    { "animate-pulse shadow-[0_0_24px_rgba(234,179,8,0.7)]": isEssential },
+  ]}
+  title={`${rating}/10 — ${label}`}
+  aria-label={`Rating: ${rating} out of 10 — ${label}`}
+>
+  {rating}
+</div>

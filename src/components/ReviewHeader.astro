@@ -1,0 +1,76 @@
+---
+import RatingBadge from "./RatingBadge.astro";
+import GenreTag from "./GenreTag.astro";
+import { slugifyStr } from "@/utils/slugify";
+
+type Props = {
+  artist: string;
+  title: string;
+  rating: number;
+  releaseYear: number;
+  genre: string[];
+  coverImage?: string;
+  reviewer: string;
+  pubDatetime: Date;
+};
+
+const { artist, title, rating, releaseYear, genre, coverImage, reviewer, pubDatetime } =
+  Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}).format(pubDatetime);
+---
+
+<div class="border-b border-border bg-muted/30">
+  <div class="app-layout py-8 sm:py-12">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+      {
+        coverImage && (
+          <div class="relative flex-none self-start">
+            <img
+              src={coverImage}
+              alt={`${artist} — ${title} album cover`}
+              class="h-48 w-48 object-cover shadow-lg sm:h-64 sm:w-64"
+              loading="eager"
+            />
+          </div>
+        )
+      }
+      <div class="flex flex-1 flex-col gap-4">
+        <div>
+          <p class="font-display text-xs font-semibold uppercase tracking-widest text-accent">
+            {artist}
+          </p>
+          <h1 class="mt-1 font-display text-3xl font-bold uppercase leading-tight tracking-wide sm:text-4xl">
+            {title}
+          </h1>
+          <p class="mt-1 font-mono text-sm text-foreground/50">{releaseYear}</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          {
+            genre.map(g => (
+              <GenreTag
+                genre={slugifyStr(g)}
+                genreName={g}
+                href={`/genres/${slugifyStr(g)}/`}
+              />
+            ))
+          }
+        </div>
+
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-foreground/50 uppercase tracking-widest">
+          <span>By {reviewer}</span>
+          <span>{formattedDate}</span>
+        </div>
+
+        <div class="mt-1">
+          <RatingBadge rating={rating} size="lg" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
