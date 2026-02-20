@@ -5,33 +5,41 @@
 
 :root,
 html[data-theme="light"] {
-  --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
-  --muted: #e6e6e6;
-  --border: #ece9e9;
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+  --accent:     #991b1b;
+  --muted:      #f0f0f0;
+  --border:     #d4d4d4;
+  --accent-gold: #b45309;
 }
 
 html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #343f60;
-  --border: #ab4b08;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --accent:     #b91c1c;
+  --muted:      #1c1c1c;
+  --border:     #2a2a2a;
+  --accent-gold: #d97706;
 }
 
 @theme inline {
-  --font-app: var(--font-google-sans-code);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --color-muted: var(--muted);
-  --color-border: var(--border);
+  --font-display: var(--font-syne);
+  --font-body:    var(--font-crimson-pro);
+  --font-mono:    var(--font-space-mono);
+  /* Keep font-app for search page compatibility */
+  --font-app:     var(--font-crimson-pro);
+  --color-background:  var(--background);
+  --color-foreground:  var(--foreground);
+  --color-accent:      var(--accent);
+  --color-muted:       var(--muted);
+  --color-border:      var(--border);
+  --color-accent-gold: var(--accent-gold);
 }
 
 @layer base {
   * {
     @apply border-border outline-accent/75;
+    border-radius: 0 !important;
     scrollbar-width: auto;
     scrollbar-color: var(--color-muted) transparent;
   }
@@ -39,11 +47,17 @@ html[data-theme="dark"] {
     @apply overflow-y-scroll scroll-smooth;
   }
   body {
-    @apply flex min-h-svh flex-col bg-background font-app text-foreground selection:bg-accent/75 selection:text-background;
+    @apply flex min-h-svh flex-col bg-background font-body text-foreground selection:bg-accent/75 selection:text-background;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
   }
   a,
   button {
     @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
+  }
+  a:not([class]) {
+    @apply text-accent no-underline hover:underline;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -59,12 +73,29 @@ html[data-theme="dark"] {
   @apply mx-auto w-full max-w-app px-4;
 }
 
+/* Crimson-line active nav */
 .active-nav {
-  @apply underline decoration-wavy decoration-2 underline-offset-8;
+  @apply text-accent underline decoration-solid decoration-2 underline-offset-8;
 }
 
 /* Source: https://piccalil.li/blog/a-more-modern-css-reset/ */
-/* Anything that has been anchored to should have extra scroll margin */
 :target {
   scroll-margin-block: 1rem;
+}
+
+/* Subtle noise texture on background — printed zine feel */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* Card hover: crimson left-border effect */
+.review-card-hover {
+  @apply transition-all border-l-2 border-l-transparent hover:border-l-accent hover:-translate-y-0.5;
 }

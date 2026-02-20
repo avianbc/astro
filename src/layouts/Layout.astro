@@ -61,11 +61,10 @@ const structuredData = {
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Load Font -->
-    <Font
-      cssVariable="--font-google-sans-code"
-      preload={[{ subset: "latin", weight: 400, style: "normal" }]}
-    />
+    <!-- Load Fonts -->
+    <Font cssVariable="--font-syne" preload={[{ subset: "latin", weight: 700, style: "normal" }]} />
+    <Font cssVariable="--font-crimson-pro" preload={[{ subset: "latin", weight: 400, style: "normal" }]} />
+    <Font cssVariable="--font-space-mono" preload={[{ subset: "latin", weight: 400, style: "normal" }]} />
 
     <!-- General Meta Tags -->
     <title>{title}</title>
@@ -122,6 +121,9 @@ const structuredData = {
     />
 
     <meta name="theme-color" content="" />
+
+    <!-- Extra head content slot (e.g. review structured data) -->
+    <slot name="head" />
 
     {
       // If PUBLIC_GOOGLE_SITE_VERIFICATION is set in the environment variable,
