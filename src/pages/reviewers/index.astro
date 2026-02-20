@@ -1,0 +1,64 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/layouts/Main.astro";
+import getSortedReviews from "@/utils/getSortedReviews";
+import { SITE } from "@/config";
+
+const reviewers = await getCollection("reviewers");
+const allReviews = await getCollection("reviews");
+const sortedReviews = getSortedReviews(allReviews);
+
+const reviewersWithCounts = reviewers.map(reviewer => ({
+  ...reviewer,
+  count: sortedReviews.filter(r => r.data.reviewer === reviewer.data.slug).length,
+}));
+---
+
+<Layout title={`Reviewers | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="Reviewers" pageDesc="The writers behind the reviews.">
+    <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {
+        reviewersWithCounts.map(reviewer => (
+          <li>
+            <a
+              href={`/reviewers/${reviewer.data.slug}/`}
+              class="group flex items-center gap-4 border border-border p-5 transition-all hover:border-accent hover:border-l-4 hover:-translate-y-0.5"
+            >
+              {reviewer.data.avatar ? (
+                <img
+                  src={reviewer.data.avatar}
+                  alt={reviewer.data.name}
+                  class="h-14 w-14 flex-none object-cover"
+                />
+              ) : (
+                <div class="flex h-14 w-14 flex-none items-center justify-center bg-muted">
+                  <span class="font-display text-2xl font-bold text-accent">
+                    {reviewer.data.name.charAt(0)}
+                  </span>
+                </div>
+              )}
+              <div>
+                <p class="font-display font-bold uppercase tracking-wide group-hover:text-accent transition-colors">
+                  {reviewer.data.name}
+                </p>
+                {reviewer.data.bio && (
+                  <p class="mt-1 font-body text-sm text-foreground/60 line-clamp-2">
+                    {reviewer.data.bio}
+                  </p>
+                )}
+                <p class="mt-1 font-mono text-xs text-foreground/40 uppercase tracking-widest">
+                  {reviewer.count} {reviewer.count === 1 ? "review" : "reviews"}
+                </p>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Main>
+  <Footer />
+</Layout>
