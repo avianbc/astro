@@ -1,0 +1,187 @@
+---
+import Layout from "./Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ReviewHeader from "@/components/ReviewHeader.astro";
+import ShareLinks from "@/components/ShareLinks.astro";
+import BackButton from "@/components/BackButton.astro";
+import BackToTopButton from "@/components/BackToTopButton.astro";
+import ReviewCard from "@/components/ReviewCard.astro";
+import type { CollectionEntry } from "astro:content";
+import { SITE } from "@/config";
+import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
+import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
+
+type Props = {
+  review: CollectionEntry<"reviews">;
+  prevReview?: CollectionEntry<"reviews"> | null;
+  nextReview?: CollectionEntry<"reviews"> | null;
+  relatedReviews?: CollectionEntry<"reviews">[];
+};
+
+const { review, prevReview, nextReview, relatedReviews = [] } = Astro.props;
+const {
+  title,
+  artist,
+  rating,
+  releaseYear,
+  genre,
+  coverImage,
+  reviewer,
+  description,
+  pubDatetime,
+  modDatetime,
+} = review.data;
+
+// Schema.org Review + MusicAlbum structured data
+const reviewStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "Review",
+  itemReviewed: {
+    "@type": "MusicAlbum",
+    name: title,
+    byArtist: { "@type": "MusicGroup", name: artist },
+    genre: genre.join(", "),
+  },
+  reviewRating: {
+    "@type": "Rating",
+    ratingValue: String(rating),
+    bestRating: "10",
+    worstRating: "1",
+  },
+  author: { "@type": "Person", name: reviewer },
+  datePublished: pubDatetime.toISOString().split("T")[0],
+};
+---
+
+<Layout
+  title={`${artist} — ${title} | ${SITE.title}`}
+  description={description}
+  pubDatetime={pubDatetime}
+  modDatetime={modDatetime}
+  scrollSmooth={true}
+>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(reviewStructuredData)}
+    slot="head"
+  />
+
+  <Header />
+  <BackButton />
+  <ReviewHeader
+    {artist}
+    {title}
+    {rating}
+    {releaseYear}
+    {genre}
+    {coverImage}
+    {reviewer}
+    {pubDatetime}
+  />
+
+  <main id="main-content" class="app-layout pb-12" data-pagefind-body>
+    <article
+      id="article"
+      class="app-prose mt-8 w-full max-w-app font-body prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+    >
+      <slot />
+    </article>
+
+    <hr class="my-8 border-border border-dashed" />
+
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <BackToTopButton />
+      <ShareLinks />
+    </div>
+
+    <hr class="my-6 border-border border-dashed" />
+
+    <!-- Prev / Next navigation -->
+    <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      {
+        prevReview && (
+          <a
+            href={`/reviews/${prevReview.id}/`}
+            class="flex w-full gap-1 hover:opacity-75"
+          >
+            <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
+            <div>
+              <span class="font-mono text-xs uppercase tracking-widest text-foreground/50">Previous Review</span>
+              <div class="font-display text-sm font-semibold text-accent">
+                {prevReview.data.artist} — {prevReview.data.title}
+              </div>
+            </div>
+          </a>
+        )
+      }
+      {
+        nextReview && (
+          <a
+            href={`/reviews/${nextReview.id}/`}
+            class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
+          >
+            <div>
+              <span class="font-mono text-xs uppercase tracking-widest text-foreground/50">Next Review</span>
+              <div class="font-display text-sm font-semibold text-accent">
+                {nextReview.data.artist} — {nextReview.data.title}
+              </div>
+            </div>
+            <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
+          </a>
+        )
+      }
+    </div>
+
+    <!-- Related reviews -->
+    {
+      relatedReviews.length > 0 && (
+        <section class="mt-12" data-pagefind-ignore>
+          <h2 class="mb-6 font-display text-sm font-semibold uppercase tracking-widest text-foreground/50">
+            More in this Genre
+          </h2>
+          <ul class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {relatedReviews.slice(0, 3).map(r => (
+              <ReviewCard {...r} />
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </main>
+
+  <Footer />
+</Layout>
+
+<script is:inline data-astro-rerun>
+  function createProgressBar() {
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+    progressContainer.appendChild(progressBar);
+    document.body.appendChild(progressContainer);
+  }
+  createProgressBar();
+
+  function updateScrollProgress() {
+    document.addEventListener("scroll", () => {
+      const winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      const myBar = document.getElementById("myBar");
+      if (myBar) myBar.style.width = scrolled + "%";
+    });
+  }
+  updateScrollProgress();
+
+  document.addEventListener("astro:after-swap", () =>
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  );
+</script>
