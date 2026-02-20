@@ -1,34 +1,69 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "@/utils/slugify";
-import Datetime from "./Datetime.astro";
+import RatingBadge from "./RatingBadge.astro";
+import GenreTag from "./GenreTag.astro";
 
 type Props = CollectionEntry<"reviews">;
 
 const { id, data } = Astro.props;
-const { title, artist, rating, releaseYear, genre, description, pubDatetime, modDatetime } = data;
+const { title, artist, rating, releaseYear, genre, coverImage, description } = data;
 
 const href = `/reviews/${id}/`;
 ---
 
-<li class="my-6">
-  <a
-    href={href}
-    class:list={[
-      "inline-block text-lg font-medium text-accent",
-      "decoration-dashed underline-offset-4 hover:underline",
-      "focus-visible:no-underline focus-visible:underline-offset-0",
-    ]}
-  >
-    <h2 style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}>
-      {artist} — {title}
-    </h2>
+<li class="group relative border border-border transition-all hover:-translate-y-0.5 hover:border-l-4 hover:border-l-accent">
+  <a href={href} class="flex h-full flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+    <!-- Album art -->
+    <div class="relative aspect-square overflow-hidden bg-muted">
+      {
+        coverImage ? (
+          <img
+            src={coverImage}
+            alt={`${artist} — ${title} album cover`}
+            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <div class="flex h-full w-full items-center justify-center bg-muted">
+            <span class="font-display text-5xl font-bold text-foreground/20">
+              {artist.charAt(0)}
+            </span>
+          </div>
+        )
+      }
+      <!-- Vignette for text readability -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+      <!-- Rating badge overlaid bottom-right -->
+      <div class="absolute bottom-2 right-2">
+        <RatingBadge rating={rating} size="sm" />
+      </div>
+    </div>
+
+    <!-- Metadata -->
+    <div class="flex flex-col gap-2 p-4">
+      <div>
+        <p class="font-display text-xs font-semibold uppercase tracking-widest text-accent">
+          {artist}
+        </p>
+        <h2
+          style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+          class="mt-0.5 font-display text-base font-bold uppercase leading-tight tracking-wide group-hover:text-accent transition-colors"
+        >
+          {title}
+        </h2>
+        <p class="mt-0.5 font-mono text-xs text-foreground/50">{releaseYear}</p>
+      </div>
+
+      <div class="flex flex-wrap gap-1.5">
+        {genre.slice(0, 2).map(g => <GenreTag genre={slugifyStr(g)} genreName={g} />)}
+      </div>
+
+      {
+        description && (
+          <p class="line-clamp-2 font-body text-sm text-foreground/70">{description}</p>
+        )
+      }
+    </div>
   </a>
-  <div class="flex items-center gap-3 text-sm opacity-80">
-    <span class="font-semibold text-accent">{rating}/10</span>
-    <span>{releaseYear}</span>
-    <span>{genre.join(", ")}</span>
-  </div>
-  <Datetime pubDatetime={pubDatetime} modDatetime={modDatetime} />
-  <p>{description}</p>
 </li>
