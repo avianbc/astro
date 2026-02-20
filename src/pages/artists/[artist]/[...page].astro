@@ -1,0 +1,69 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import { type CollectionEntry, getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ReviewCard from "@/components/ReviewCard.astro";
+import Pagination from "@/components/Pagination.astro";
+import getSortedReviews from "@/utils/getSortedReviews";
+import { slugifyStr } from "@/utils/slugify";
+import { SITE } from "@/config";
+
+type Props = {
+  page: Page<CollectionEntry<"reviews">>;
+  artistName: string;
+};
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const allReviews = await getCollection("reviews");
+  const sorted = getSortedReviews(allReviews);
+
+  // Collect unique artist slugs
+  const artistSlugs = [...new Set(sorted.map(r => slugifyStr(r.data.artist)))];
+
+  return artistSlugs.flatMap(artistSlug => {
+    const artistReviews = sorted.filter(
+      r => slugifyStr(r.data.artist) === artistSlug
+    );
+    const artistName = artistReviews[0]?.data.artist ?? artistSlug;
+    return paginate(artistReviews, {
+      params: { artist: artistSlug },
+      props: { artistName },
+      pageSize: SITE.postPerPage,
+    });
+  });
+};
+
+const { page, artistName } = Astro.props;
+---
+
+<Layout title={`${artistName} Reviews | ${SITE.title}`}>
+  <Header />
+  <main id="main-content" class="app-layout pb-12">
+    <nav class="pt-4 pb-2 font-mono text-xs uppercase tracking-widest text-foreground/50">
+      <a href="/reviews/" class="hover:text-accent">Reviews</a>
+      <span class="mx-2">/</span>
+      <span>{artistName}</span>
+    </nav>
+    <h1 class="mt-2 mb-6 font-display text-3xl font-bold uppercase tracking-wide">
+      {artistName}
+    </h1>
+
+    {
+      page.data.length > 0 ? (
+        <>
+          <ul class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {page.data.map(review => (
+              <ReviewCard {...review} />
+            ))}
+          </ul>
+          <Pagination {page} />
+        </>
+      ) : (
+        <p class="font-body text-foreground/60">No reviews found for this artist.</p>
+      )
+    }
+  </main>
+  <Footer />
+</Layout>

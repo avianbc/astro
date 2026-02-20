@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/layouts/Main.astro";
+import reviewFilter from "@/utils/reviewFilter";
+import getReviewsByDecade from "@/utils/getReviewsByDecade";
+import { SITE } from "@/config";
+
+const allReviews = await getCollection("reviews");
+const filteredReviews = allReviews.filter(reviewFilter);
+
+// Compute unique decades from releaseYear
+const decades = [
+  ...new Set(
+    filteredReviews.map(r => Math.floor(r.data.releaseYear / 10) * 10)
+  ),
+].sort((a, b) => b - a); // most recent first
+
+const decadesWithCounts = decades.map(decade => ({
+  decade,
+  label: `${decade}s`,
+  count: getReviewsByDecade(allReviews, decade).length,
+}));
+---
+
+<Layout title={`Decades | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="Decades" pageDesc="Browse reviews by the decade the album was released.">
+    <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {
+        decadesWithCounts.map(({ decade, label, count }) => (
+          <li>
+            <a
+              href={`/decades/${decade}/`}
+              class="group flex flex-col gap-1 border border-border p-4 transition-all hover:border-accent hover:border-l-4 hover:-translate-y-0.5"
+            >
+              <span class="font-mono text-2xl font-bold text-accent">
+                {label}
+              </span>
+              <span class="font-mono text-xs text-foreground/50">
+                {count} {count === 1 ? "review" : "reviews"}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Main>
+  <Footer />
+</Layout>

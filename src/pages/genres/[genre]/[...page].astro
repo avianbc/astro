@@ -1,0 +1,63 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import { type CollectionEntry, getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ReviewCard from "@/components/ReviewCard.astro";
+import Pagination from "@/components/Pagination.astro";
+import getUniqueGenres from "@/utils/getUniqueGenres";
+import getReviewsByGenre from "@/utils/getReviewsByGenre";
+import { SITE } from "@/config";
+
+type Props = {
+  page: Page<CollectionEntry<"reviews">>;
+  genreName: string;
+};
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const allReviews = await getCollection("reviews");
+  const genres = getUniqueGenres(allReviews);
+
+  return genres.flatMap(({ genre, genreName }) => {
+    const genreReviews = getReviewsByGenre(allReviews, genre);
+    return paginate(genreReviews, {
+      params: { genre },
+      props: { genreName },
+      pageSize: SITE.postPerPage,
+    });
+  });
+};
+
+const { page, genreName } = Astro.props;
+---
+
+<Layout title={`${genreName} Reviews | ${SITE.title}`}>
+  <Header />
+  <main id="main-content" class="app-layout pb-12">
+    <nav class="pt-4 pb-2 font-mono text-xs uppercase tracking-widest text-foreground/50">
+      <a href="/genres/" class="hover:text-accent">Genres</a>
+      <span class="mx-2">/</span>
+      <span>{genreName}</span>
+    </nav>
+    <h1 class="mt-2 mb-6 font-display text-3xl font-bold uppercase tracking-wide">
+      {genreName}
+    </h1>
+
+    {
+      page.data.length > 0 ? (
+        <>
+          <ul class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {page.data.map(review => (
+              <ReviewCard {...review} />
+            ))}
+          </ul>
+          <Pagination {page} />
+        </>
+      ) : (
+        <p class="font-body text-foreground/60">No reviews found for this genre.</p>
+      )
+    }
+  </main>
+  <Footer />
+</Layout>
