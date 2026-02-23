@@ -4,8 +4,8 @@ artist: "Kendrick Lamar"
 rating: 10
 releaseYear: 2015
 genre: ["Hip-Hop", "Jazz Rap", "Funk", "Neo-Soul"]
-coverImage: "https://upload.wikimedia.org/wikipedia/en/f/f6/To_Pimp_a_Butterfly.png"
-reviewer: "your-name"
+coverImage: "https://upload.wikimedia.org/wikipedia/en/f/f6/Kendrick_Lamar_-_To_Pimp_a_Butterfly.png"
+reviewer: "avian"
 pubDatetime: 2025-02-01T10:00:00Z
 featured: false
 description: "A state-of-the-nation address wrapped in the most formally ambitious rap album ever made. Kendrick Lamar's third record demands everything from its listener and returns more."
