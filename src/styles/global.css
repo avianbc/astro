@@ -99,7 +99,7 @@ body::before {
 }
 
 html[data-theme="dark"] body::before {
-  opacity: 0.08;
+  opacity: 0.05;
   mix-blend-mode: screen;
 }
 
