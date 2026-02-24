@@ -69,8 +69,8 @@ export default defineConfig({
         styles: ["normal"],
       },
       {
-        name: "Crimson Pro",
-        cssVariable: "--font-crimson-pro",
+        name: "IBM Plex Serif",
+        cssVariable: "--font-ibm-plex-serif",
         provider: fontProviders.google(),
         fallbacks: ["serif"],
         weights: [400, 600],
