@@ -95,7 +95,3 @@ body::before {
   background-size: 200px 200px;
 }
 
-/* Card hover: crimson left-border effect */
-.review-card-hover {
-  @apply transition-all border-l-2 border-l-transparent hover:border-l-accent hover:-translate-y-0.5;
-}
