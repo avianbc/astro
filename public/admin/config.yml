@@ -1,0 +1,140 @@
+backend:
+  name: github
+  repo: avianbc/astro
+  branch: main
+  base_url: https://sveltia-cms-auth.avianbc.workers.dev
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: reviews
+    label: Album Reviews
+    label_singular: Album Review
+    folder: "src/data/reviews"
+    create: true
+    format: frontmatter
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string", hint: "Album title" }
+      - { label: "Artist", name: "artist", widget: "string" }
+      - {
+          label: "Rating",
+          name: "rating",
+          widget: "number",
+          value_type: "int",
+          min: 1,
+          max: 10,
+          step: 1,
+        }
+      - {
+          label: "Release Year",
+          name: "releaseYear",
+          widget: "number",
+          value_type: "int",
+          min: 1960,
+          max: 2030,
+        }
+      - label: "Genre"
+        name: "genre"
+        widget: "select"
+        multiple: true
+        min: 1
+        options:
+          - "Black Metal"
+          - "Death Metal"
+          - "Doom Metal"
+          - "Thrash Metal"
+          - "Power Metal"
+          - "Progressive Metal"
+          - "Sludge Metal"
+          - "Stoner Metal"
+          - "Grindcore"
+          - "Metalcore"
+          - "Deathcore"
+          - "Post-Metal"
+          - "Atmospheric Black Metal"
+          - "Melodic Death Metal"
+          - "Technical Death Metal"
+          - "Folk Metal"
+          - "Symphonic Metal"
+          - "Industrial Metal"
+          - "Nu Metal"
+          - "Speed Metal"
+          - "Heavy Metal"
+          - "NWOBHM"
+          - "Hardcore"
+          - "Crossover"
+          - "Other"
+      - { label: "Cover Image", name: "coverImage", widget: "image" }
+      - label: "Reviewer"
+        name: "reviewer"
+        widget: "relation"
+        collection: "reviewers"
+        search_fields: ["name"]
+        value_field: "slug"
+        display_fields: ["name"]
+      - { label: "Publish Date", name: "pubDatetime", widget: "datetime" }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "text",
+          hint: "Short summary for cards and SEO",
+        }
+      - label: "Tags"
+        name: "tags"
+        widget: "select"
+        multiple: true
+        required: false
+        options:
+          - "New Release"
+          - "Classic"
+          - "Reissue"
+          - "Debut Album"
+          - "EP"
+          - "Live Album"
+          - "Split"
+          - "Compilation"
+          - "Demo"
+          - "Essential Listening"
+      - {
+          label: "Featured",
+          name: "featured",
+          widget: "boolean",
+          default: false,
+          required: false,
+        }
+      - {
+          label: "Draft",
+          name: "draft",
+          widget: "boolean",
+          default: true,
+          hint: "Uncheck when ready to publish",
+        }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: reviewers
+    label: Reviewers
+    label_singular: Reviewer
+    folder: "src/data/reviewers"
+    create: true
+    format: yml
+    slug: "{{slug}}"
+    identifier_field: name
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - {
+          label: "Slug",
+          name: "slug",
+          widget: "string",
+          hint: "URL-friendly name (e.g., brad-carey)",
+        }
+      - { label: "Bio", name: "bio", widget: "text", required: false }
+      - { label: "Avatar", name: "avatar", widget: "image", required: false }
+      - label: "Links"
+        name: "links"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Label", name: "label", widget: "string" }
+          - { label: "URL", name: "url", widget: "string" }

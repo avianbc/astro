@@ -4,8 +4,8 @@ artist: "Oasis"
 rating: 5
 releaseYear: 1997
 genre: ["Britpop", "Rock"]
-coverImage: "https://upload.wikimedia.org/wikipedia/en/8/8e/Be_Here_Now_-_Oasis.jpg"
-reviewer: "your-name"
+coverImage: "https://upload.wikimedia.org/wikipedia/en/0/08/BeHereNowcover.jpg"
+reviewer: "avian"
 pubDatetime: 2025-01-22T10:00:00Z
 description: "The biggest album launch in British history arrived over-produced and under-edited. Twenty-five years on, the songs are fighting their way back to the surface."
 tags: ["oasis", "britpop", "90s", "gallagher"]

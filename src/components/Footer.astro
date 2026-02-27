@@ -12,13 +12,13 @@ const { noMarginTop = false, class: className, ...attrs } = Astro.props;
 ---
 
 <footer
-  class:list={["app-layout", { "mt-auto": !noMarginTop }, className]}
+  class:list={[{ "mt-auto": !noMarginTop }, "border-t border-accent", className]}
   {...attrs}
 >
   <div
     class:list={[
+      "app-layout",
       "py-6 sm:py-4",
-      "border-t border-border",
       "flex flex-col items-center justify-between sm:flex-row-reverse",
     ]}
   >
