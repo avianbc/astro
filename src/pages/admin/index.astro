@@ -1,0 +1,106 @@
+---
+// Sveltia CMS admin page — intentionally outside the site layout.
+// Served at /admin/ by Astro routing; config.yml lives in public/admin/.
+---
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Sveltia CMS</title>
+  </head>
+  <body>
+    <script
+      is:inline
+      src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <script is:inline>
+      // --- Spotify Embed ---
+      CMS.registerEditorComponent({
+        id: "spotify",
+        label: "Spotify",
+        icon: "music_note",
+        fields: [
+          {
+            name: "url",
+            label: "Spotify URL",
+            widget: "string",
+            hint: "e.g. https://open.spotify.com/album/...",
+          },
+        ],
+        pattern:
+          /<iframe src="https:\/\/open\.spotify\.com\/embed\/(?<type>[^/]+)\/(?<id>[^"?]+)(?:\?[^"]*)?"[^>]*><\/iframe>/m,
+        fromBlock: ({ groups }) => ({
+          url: `https://open.spotify.com/${groups.type}/${groups.id}`,
+        }),
+        toBlock: ({ url }) => {
+          const m = url?.match(
+            /open\.spotify\.com\/(album|track|playlist)\/([a-zA-Z0-9]+)/
+          );
+          if (!m) return "";
+          return `<iframe src="https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator" width="100%" height="352" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+        },
+      });
+
+      // --- YouTube Embed ---
+      CMS.registerEditorComponent({
+        id: "youtube",
+        label: "YouTube",
+        icon: "youtube_activity",
+        fields: [
+          {
+            name: "url",
+            label: "YouTube URL",
+            widget: "string",
+            hint: "e.g. https://www.youtube.com/watch?v=...",
+          },
+        ],
+        pattern:
+          /<iframe src="https:\/\/www\.youtube-nocookie\.com\/embed\/(?<id>[^"?]+)"[^>]*><\/iframe>/m,
+        fromBlock: ({ groups }) => ({
+          url: `https://www.youtube.com/watch?v=${groups.id}`,
+        }),
+        toBlock: ({ url }) => {
+          const m = url?.match(
+            /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]+)/
+          );
+          if (!m) return "";
+          return `<iframe src="https://www.youtube-nocookie.com/embed/${m[1]}" width="100%" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+        },
+      });
+
+      // --- Bandcamp Embed ---
+      CMS.registerEditorComponent({
+        id: "bandcamp",
+        label: "Bandcamp",
+        icon: "album",
+        fields: [
+          {
+            name: "albumId",
+            label: "Album ID",
+            widget: "string",
+            hint: "Numeric ID from Bandcamp embed code (e.g. 1234567890)",
+          },
+          {
+            name: "size",
+            label: "Size",
+            widget: "select",
+            options: ["large", "small"],
+            default: "large",
+          },
+        ],
+        pattern:
+          /<iframe[^>]*src="https:\/\/bandcamp\.com\/EmbeddedPlayer\/album=(?<albumId>\d+)\/size=(?<size>[^/]+)[^"]*"[^>]*><\/iframe>/m,
+        fromBlock: ({ groups }) => ({
+          albumId: groups.albumId,
+          size: groups.size,
+        }),
+        toBlock: ({ albumId, size = "large" }) => {
+          if (!albumId) return "";
+          const height = size === "large" ? 470 : 120;
+          return `<iframe src="https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=${size}/bgcol=333333/linkcol=e99708/tracklist=false/transparent=true/" width="100%" height="${height}" frameborder="0" loading="lazy"></iframe>`;
+        },
+      });
+    </script>
+  </body>
+</html>
