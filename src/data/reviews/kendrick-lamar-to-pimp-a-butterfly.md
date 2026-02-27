@@ -1,20 +1,28 @@
 ---
-title: "To Pimp a Butterfly"
-artist: "Kendrick Lamar"
-rating: 10
+title: To Pimp a Butterfly
+artist: Kendrick Lamar
+rating: 9
 releaseYear: 2015
-genre: ["Hip-Hop", "Jazz Rap", "Funk", "Neo-Soul"]
-coverImage: "https://upload.wikimedia.org/wikipedia/en/f/f6/Kendrick_Lamar_-_To_Pimp_a_Butterfly.png"
-reviewer: "avian"
+genre:
+  - Hip-Hop
+  - Jazz Rap
+  - Funk
+  - Neo-Soul
+coverImage: https://upload.wikimedia.org/wikipedia/en/f/f6/Kendrick_Lamar_-_To_Pimp_a_Butterfly.png
+reviewer: avian
 pubDatetime: 2025-02-01T10:00:00Z
+description: A state-of-the-nation address wrapped in the most formally ambitious rap album ever made. Kendrick Lamar's third record demands everything from its listener and returns more.
+tags:
+  - kendrick-lamar
+  - hip-hop
+  - jazz
+  - 2010s
 featured: false
-description: "A state-of-the-nation address wrapped in the most formally ambitious rap album ever made. Kendrick Lamar's third record demands everything from its listener and returns more."
-tags: ["kendrick-lamar", "hip-hop", "jazz", "2010s"]
 ---
 
-By the time Kendrick Lamar plays his poem for the ghost of Tupac Shakur at the end of "Mortal Man" — a poem he has been building, stanza by stanza, across the full 79 minutes of *To Pimp a Butterfly* — you understand what kind of record this is. Not an album. A reckoning.
+By the time Kendrick Lamar plays his poem for the ghost of Tupac Shakur at the end of "Mortal Man" — a poem he has been building, stanza by stanza, across the full 79 minutes of _To Pimp a Butterfly_ — you understand what kind of record this is. Not an album. A reckoning.
 
-It arrived in March 2015, leaked a week early, and immediately rewired the critical discourse around rap music. The album that everyone had been expecting, *good kid, m.A.A.d city* Part 2, did not show up. This did instead: a live-funk, jazz-rap, spoken word, protest record that wore its literary ambitions without apology.
+It arrived in March 2015, leaked a week early, and immediately rewired the critical discourse around rap music. The album that everyone had been expecting, _good kid, m.A.A.d city_ Part 2, did not show up. This did instead: a live-funk, jazz-rap, spoken word, protest record that wore its literary ambitions without apology.
 
 ## The Architecture
 
@@ -28,6 +36,6 @@ The structural device — a poem addressed to a butterfly, read in fragments, on
 
 The conversation with Tupac that follows is assembled from a 1994 interview. It should not work. It does.
 
-*To Pimp a Butterfly* is the rare album that is exactly as important as people said it was when it came out. It has not aged. It will not age. It is describing something permanent.
+_To Pimp a Butterfly_ is the rare album that is exactly as important as people said it was when it came out. It has not aged. It will not age. It is describing something permanent.
 
 **10/10**
