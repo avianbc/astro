@@ -1,0 +1,63 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import { type CollectionEntry, getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ReviewCard from "@/components/ReviewCard.astro";
+import Pagination from "@/components/Pagination.astro";
+import getUniqueLabels from "@/utils/getUniqueLabels";
+import getReviewsByLabel from "@/utils/getReviewsByLabel";
+import { SITE } from "@/config";
+
+type Props = {
+  page: Page<CollectionEntry<"reviews">>;
+  labelName: string;
+};
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const allReviews = await getCollection("reviews");
+  const labels = getUniqueLabels(allReviews);
+
+  return labels.flatMap(({ label, labelName }) => {
+    const labelReviews = getReviewsByLabel(allReviews, label);
+    return paginate(labelReviews, {
+      params: { label },
+      props: { labelName },
+      pageSize: SITE.postPerPage,
+    });
+  });
+};
+
+const { page, labelName } = Astro.props;
+---
+
+<Layout title={`${labelName} | ${SITE.title}`}>
+  <Header />
+  <main id="main-content" class="app-layout pb-12">
+    <nav class="pt-4 pb-2 font-mono text-xs uppercase tracking-widest text-foreground/50">
+      <a href="/labels/" class="hover:text-accent">Labels</a>
+      <span class="mx-2">/</span>
+      <span>{labelName}</span>
+    </nav>
+    <h1 class="mt-2 mb-6 font-display text-3xl font-bold uppercase tracking-wide">
+      {labelName}
+    </h1>
+
+    {
+      page.data.length > 0 ? (
+        <>
+          <ul class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {page.data.map(review => (
+              <ReviewCard {...review} />
+            ))}
+          </ul>
+          <Pagination {page} />
+        </>
+      ) : (
+        <p class="font-body text-foreground/60">No reviews found for this label.</p>
+      )
+    }
+  </main>
+  <Footer />
+</Layout>

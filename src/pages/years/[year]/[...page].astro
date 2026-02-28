@@ -1,0 +1,63 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import { type CollectionEntry, getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ReviewCard from "@/components/ReviewCard.astro";
+import Pagination from "@/components/Pagination.astro";
+import getUniqueYears from "@/utils/getUniqueYears";
+import getReviewsByYear from "@/utils/getReviewsByYear";
+import { SITE } from "@/config";
+
+type Props = {
+  page: Page<CollectionEntry<"reviews">>;
+  year: number;
+};
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const allReviews = await getCollection("reviews");
+  const years = getUniqueYears(allReviews);
+
+  return years.flatMap(year => {
+    const yearReviews = getReviewsByYear(allReviews, year);
+    return paginate(yearReviews, {
+      params: { year: String(year) },
+      props: { year },
+      pageSize: SITE.postPerPage,
+    });
+  });
+};
+
+const { page, year } = Astro.props;
+---
+
+<Layout title={`${year} | ${SITE.title}`}>
+  <Header />
+  <main id="main-content" class="app-layout pb-12">
+    <nav class="pt-4 pb-2 font-mono text-xs uppercase tracking-widest text-foreground/50">
+      <a href="/years/" class="hover:text-accent">Years</a>
+      <span class="mx-2">/</span>
+      <span>{year}</span>
+    </nav>
+    <h1 class="mt-2 mb-6 font-display text-3xl font-bold uppercase tracking-wide">
+      {year}
+    </h1>
+
+    {
+      page.data.length > 0 ? (
+        <>
+          <ul class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {page.data.map(review => (
+              <ReviewCard {...review} />
+            ))}
+          </ul>
+          <Pagination {page} />
+        </>
+      ) : (
+        <p class="font-body text-foreground/60">No reviews from this year.</p>
+      )
+    }
+  </main>
+  <Footer />
+</Layout>

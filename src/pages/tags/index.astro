@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/layouts/Main.astro";
+import getUniqueReviewTags from "@/utils/getUniqueReviewTags";
+import getReviewsByTag from "@/utils/getReviewsByTag";
+import { SITE } from "@/config";
+
+const allReviews = await getCollection("reviews");
+const tags = getUniqueReviewTags(allReviews);
+
+const tagsWithCounts = tags.map(({ tag, tagName }) => ({
+  tag,
+  tagName,
+  count: getReviewsByTag(allReviews, tag).length,
+}));
+---
+
+<Layout title={`Tags | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="Tags" pageDesc="Browse reviews by editorial tag.">
+    <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {
+        tagsWithCounts.map(({ tag, tagName, count }) => (
+          <li>
+            <a
+              href={`/tags/${tag}/`}
+              class="group flex flex-col gap-1 border border-border p-4 transition-all hover:border-accent hover:border-l-[3px] hover:-translate-y-0.5"
+            >
+              <span class="font-display text-sm font-bold uppercase tracking-widest group-hover:text-accent transition-colors">
+                {tagName}
+              </span>
+              <span class="font-mono text-xs text-foreground/50">
+                {count} {count === 1 ? "review" : "reviews"}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Main>
+  <Footer />
+</Layout>

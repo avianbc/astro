@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/layouts/Main.astro";
+import getUniqueYears from "@/utils/getUniqueYears";
+import getReviewsByYear from "@/utils/getReviewsByYear";
+import { SITE } from "@/config";
+
+const allReviews = await getCollection("reviews");
+const years = getUniqueYears(allReviews);
+
+const yearsWithCounts = years.map(year => ({
+  year,
+  count: getReviewsByYear(allReviews, year).length,
+}));
+---
+
+<Layout title={`Years | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="Years" pageDesc="Browse reviews by album release year.">
+    <ul class="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
+      {
+        yearsWithCounts.map(({ year, count }) => (
+          <li>
+            <a
+              href={`/years/${year}/`}
+              class="group flex flex-col gap-1 border border-border p-4 transition-all hover:border-accent hover:border-l-[3px] hover:-translate-y-0.5"
+            >
+              <span class="font-mono text-xl font-bold text-accent">
+                {year}
+              </span>
+              <span class="font-mono text-xs text-foreground/50">
+                {count} {count === 1 ? "review" : "reviews"}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Main>
+  <Footer />
+</Layout>
