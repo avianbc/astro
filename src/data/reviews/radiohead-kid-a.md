@@ -9,7 +9,7 @@ reviewer: "avian"
 pubDatetime: 2025-01-15T10:00:00Z
 featured: true
 description: "Radiohead's fourth album remains the definitive statement of a band dissolving rock music into something colder, stranger, and more honest."
-tags: ["radiohead", "art-rock", "electronic", "2000s"]
+tags: ["Classic", "Essential Listening"]
 ---
 
 There is a moment near the end of "How to Disappear Completely" where Thom Yorke repeats *"I'm not here / This isn't happening"* over a string arrangement so thick it feels like fog rolling through the speakers. It is one of the most fully-realised expressions of dissociation ever committed to tape. That one moment contains the whole thesis of *Kid A*.

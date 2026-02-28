@@ -37,35 +37,11 @@ collections:
         }
       - label: "Genre"
         name: "genre"
-        widget: "select"
-        multiple: true
+        widget: "list"
+        allow_add: true
         min: 1
-        options:
-          - "Black Metal"
-          - "Death Metal"
-          - "Doom Metal"
-          - "Thrash Metal"
-          - "Power Metal"
-          - "Progressive Metal"
-          - "Sludge Metal"
-          - "Stoner Metal"
-          - "Grindcore"
-          - "Metalcore"
-          - "Deathcore"
-          - "Post-Metal"
-          - "Atmospheric Black Metal"
-          - "Melodic Death Metal"
-          - "Technical Death Metal"
-          - "Folk Metal"
-          - "Symphonic Metal"
-          - "Industrial Metal"
-          - "Nu Metal"
-          - "Speed Metal"
-          - "Heavy Metal"
-          - "NWOBHM"
-          - "Hardcore"
-          - "Crossover"
-          - "Other"
+        hint: "Pick from existing genres or type a new one. Use Title Case (e.g. 'Post-Punk', 'Jazz Rap')."
+        field: { label: "Genre", name: "genre", widget: "string" }
       - { label: "Cover Image", name: "coverImage", widget: "image" }
       - label: "Reviewer"
         name: "reviewer"
@@ -83,20 +59,11 @@ collections:
         }
       - label: "Tags"
         name: "tags"
-        widget: "select"
-        multiple: true
+        widget: "list"
+        allow_add: true
         required: false
-        options:
-          - "New Release"
-          - "Classic"
-          - "Reissue"
-          - "Debut Album"
-          - "EP"
-          - "Live Album"
-          - "Split"
-          - "Compilation"
-          - "Demo"
-          - "Essential Listening"
+        hint: "Optional labels for the review. Use Title Case (e.g. 'Classic', 'Debut Album')."
+        field: { label: "Tag", name: "tag", widget: "string" }
       - {
           label: "Featured",
           name: "featured",

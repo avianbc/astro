@@ -13,10 +13,8 @@ reviewer: avian
 pubDatetime: 2025-02-01T10:00:00Z
 description: A state-of-the-nation address wrapped in the most formally ambitious rap album ever made. Kendrick Lamar's third record demands everything from its listener and returns more.
 tags:
-  - kendrick-lamar
-  - hip-hop
-  - jazz
-  - 2010s
+  - Classic
+  - Essential Listening
 featured: false
 ---
 
