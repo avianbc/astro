@@ -1,13 +1,14 @@
 import type { CollectionEntry } from "astro:content";
 import getSortedReviews from "./getSortedReviews";
+import { slugifyStr } from "./slugify";
 
 const getReviewsByArtist = (
   reviews: CollectionEntry<"reviews">[],
-  artist: string
+  artistSlug: string
 ) =>
   getSortedReviews(
     reviews.filter(
-      review => review.data.artist.toLowerCase() === artist.toLowerCase()
+      review => slugifyStr(review.data.artist) === artistSlug
     )
   );
 
