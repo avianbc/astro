@@ -1,5 +1,5 @@
 export const SITE = {
-  website: "https://your-site.pages.dev/", // replace this with your deployed domain
+  website: "https://astro-emx.pages.dev/", // replace this with your deployed domain
   author: "Your Name",
   profile: "",
   desc: "Music reviews — albums worth your time.",
@@ -10,7 +10,7 @@ export const SITE = {
   postPerPage: 8,
   scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
   showArchives: false,
-  showBackButton: true,
+  showBackButton: false,
   editPost: {
     enabled: false,
     text: "Edit page",
