@@ -1,0 +1,158 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/layouts/Main.astro";
+import getUniqueArtists from "@/utils/getUniqueArtists";
+import getUniqueGenres from "@/utils/getUniqueGenres";
+import getUniqueLabels from "@/utils/getUniqueLabels";
+import getUniqueReviewTags from "@/utils/getUniqueReviewTags";
+import getUniqueYears from "@/utils/getUniqueYears";
+import reviewFilter from "@/utils/reviewFilter";
+import { SITE } from "@/config";
+
+const allReviews = await getCollection("reviews");
+const filteredReviews = allReviews.filter(reviewFilter);
+
+const artists = getUniqueArtists(allReviews);
+const genres = getUniqueGenres(allReviews);
+const labels = getUniqueLabels(allReviews);
+const tags = getUniqueReviewTags(allReviews);
+const years = getUniqueYears(allReviews);
+
+const decades = [
+  ...new Set(
+    filteredReviews.map(r => Math.floor(r.data.releaseYear / 10) * 10)
+  ),
+].sort((a, b) => b - a);
+
+const reviewers = await getCollection("reviewers");
+
+interface BrowseSection {
+  title: string;
+  href: string;
+  description: string;
+  count: number;
+  items: { label: string; href: string }[];
+}
+
+const sections: BrowseSection[] = [
+  {
+    title: "Artists",
+    href: "/artists/",
+    description: "Browse by artist",
+    count: artists.length,
+    items: artists.slice(0, 6).map(a => ({
+      label: a.artistName,
+      href: `/artists/${a.artist}/`,
+    })),
+  },
+  {
+    title: "Genres",
+    href: "/genres/",
+    description: "Browse by genre",
+    count: genres.length,
+    items: genres.slice(0, 6).map(g => ({
+      label: g.genreName,
+      href: `/genres/${g.genre}/`,
+    })),
+  },
+  {
+    title: "Decades",
+    href: "/decades/",
+    description: "Browse by decade",
+    count: decades.length,
+    items: decades.slice(0, 6).map(d => ({
+      label: `${d}s`,
+      href: `/decades/${d}/`,
+    })),
+  },
+  {
+    title: "Years",
+    href: "/years/",
+    description: "Browse by release year",
+    count: years.length,
+    items: years.slice(0, 6).map(y => ({
+      label: String(y),
+      href: `/years/${y}/`,
+    })),
+  },
+  {
+    title: "Labels",
+    href: "/labels/",
+    description: "Browse by record label",
+    count: labels.length,
+    items: labels.slice(0, 6).map(l => ({
+      label: l.labelName,
+      href: `/labels/${l.label}/`,
+    })),
+  },
+  {
+    title: "Tags",
+    href: "/tags/",
+    description: "Browse by editorial tag",
+    count: tags.length,
+    items: tags.slice(0, 6).map(t => ({
+      label: t.tagName,
+      href: `/tags/${t.tag}/`,
+    })),
+  },
+  {
+    title: "Reviewers",
+    href: "/reviewers/",
+    description: "Browse by reviewer",
+    count: reviewers.length,
+    items: reviewers.slice(0, 6).map(r => ({
+      label: r.data.name,
+      href: `/reviewers/${r.data.slug}/`,
+    })),
+  },
+];
+---
+
+<Layout title={`Browse | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="Browse" pageDesc={`Explore ${filteredReviews.length} reviews across ${sections.length} dimensions.`}>
+    <div class="grid gap-8 sm:grid-cols-2">
+      {
+        sections
+          .filter(s => s.count > 0)
+          .map(section => (
+            <section class="border border-border p-5 transition-all hover:border-accent/40">
+              <a href={section.href} class="group">
+                <h2 class="font-display text-lg font-bold uppercase tracking-widest group-hover:text-accent transition-colors">
+                  {section.title}
+                  <span class="ml-2 font-mono text-xs font-normal text-foreground/40">
+                    {section.count}
+                  </span>
+                </h2>
+                <p class="mt-1 font-body text-sm text-foreground/50">
+                  {section.description}
+                </p>
+              </a>
+              <div class="mt-4 flex flex-wrap gap-2">
+                {section.items.map(item => (
+                  <a
+                    href={item.href}
+                    class="inline-block border border-border px-2 py-0.5 font-display text-xs font-semibold uppercase tracking-widest text-foreground/70 transition-colors hover:border-accent hover:text-accent"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                {section.count > 6 && (
+                  <a
+                    href={section.href}
+                    class="inline-block px-2 py-0.5 font-mono text-xs text-foreground/40 hover:text-accent transition-colors"
+                  >
+                    +{section.count - 6} more →
+                  </a>
+                )}
+              </div>
+            </section>
+          ))
+      }
+    </div>
+  </Main>
+  <Footer />
+</Layout>
