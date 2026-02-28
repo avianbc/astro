@@ -1,14 +1,20 @@
 ---
+import type { GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
+import Pagination from "@/components/Pagination.astro";
 import ReviewCard from "@/components/ReviewCard.astro";
 import getSortedReviews from "@/utils/getSortedReviews";
 import { SITE } from "@/config";
 
-const allReviews = await getCollection("reviews");
-const sortedReviews = getSortedReviews(allReviews);
+export const getStaticPaths = (async ({ paginate }) => {
+  const reviews = await getCollection("reviews", ({ data }) => !data.draft);
+  return paginate(getSortedReviews(reviews), { pageSize: SITE.postPerPage });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
 ---
 
 <Layout title={`Reviews | ${SITE.title}`}>
@@ -17,13 +23,13 @@ const sortedReviews = getSortedReviews(allReviews);
     <div class="border-b border-accent pb-6 pt-8">
       <h1 class="font-display text-3xl font-bold uppercase tracking-wide sm:text-4xl">Reviews</h1>
       <p class="mt-2 font-body text-foreground/60">
-        All album reviews, sorted by date. {sortedReviews.length} total.
+        All album reviews, sorted by date. {page.total} total.
       </p>
     </div>
     {
-      sortedReviews.length > 0 ? (
+      page.data.length > 0 ? (
         <ul class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
-          {sortedReviews.map(review => (
+          {page.data.map(review => (
             <ReviewCard {...review} />
           ))}
         </ul>
@@ -32,5 +38,6 @@ const sortedReviews = getSortedReviews(allReviews);
       )
     }
   </main>
-  <Footer />
+  <Pagination {page} />
+  <Footer noMarginTop={page.lastPage > 1} />
 </Layout>
