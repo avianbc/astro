@@ -52,6 +52,13 @@ collections:
         display_fields: ["name"]
       - { label: "Publish Date", name: "pubDatetime", widget: "datetime" }
       - {
+          label: "Modified Date",
+          name: "modDatetime",
+          widget: "datetime",
+          required: false,
+          hint: "Leave blank unless updating a published review",
+        }
+      - {
           label: "Description",
           name: "description",
           widget: "text",
