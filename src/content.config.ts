@@ -38,7 +38,6 @@ const reviews = defineCollection({
     modDatetime: z.date().nullable().optional(),
     featured: z.boolean().optional(),
     draft: z.boolean().optional(),
-    label: z.string().optional(),
     description: z.string(),
     tags: z.array(z.string()).default([]),
   }),
