@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
-import { slugifyStr } from "./slugify";
 import reviewFilter from "./reviewFilter";
+import getUniqueBySlug from "./getUniqueBySlug";
 
 interface Genre {
   genre: string;
@@ -8,16 +8,13 @@ interface Genre {
 }
 
 const getUniqueGenres = (reviews: CollectionEntry<"reviews">[]): Genre[] => {
-  const genres: Genre[] = reviews
+  const allGenres = reviews
     .filter(reviewFilter)
-    .flatMap(review => review.data.genre)
-    .map(genre => ({ genre: slugifyStr(genre), genreName: genre }))
-    .filter(
-      (value, index, self) =>
-        self.findIndex(g => g.genre === value.genre) === index
-    )
-    .sort((a, b) => a.genre.localeCompare(b.genre));
-  return genres;
+    .flatMap(review => review.data.genre);
+  return getUniqueBySlug(allGenres).map(({ slug, name }) => ({
+    genre: slug,
+    genreName: name,
+  }));
 };
 
 export default getUniqueGenres;
