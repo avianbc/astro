@@ -9,12 +9,13 @@ type Props = {
   rating: number;
   releaseYear: number;
   genre: string[];
+  label?: string;
   coverImage?: string;
   reviewer: string;
   pubDatetime: Date;
 };
 
-const { artist, title, rating, releaseYear, genre, coverImage, reviewer, pubDatetime } =
+const { artist, title, rating, releaseYear, genre, label, coverImage, reviewer, pubDatetime } =
   Astro.props;
 
 const formattedDate = new Intl.DateTimeFormat("en-US", {
@@ -41,13 +42,19 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
       }
       <div class="flex flex-1 flex-col gap-4">
         <div>
-          <p class="font-display text-xs font-semibold uppercase tracking-widest text-accent">
+          <a href={`/artists/${slugifyStr(artist)}/`} class="font-display text-xs font-semibold uppercase tracking-widest text-accent hover:underline">
             {artist}
-          </p>
+          </a>
           <h1 class="mt-1 font-display text-3xl font-bold uppercase leading-tight tracking-wide sm:text-4xl">
             {title}
           </h1>
-          <p class="mt-1 font-mono text-sm text-foreground/50">{releaseYear}</p>
+          <div class="mt-1 flex flex-wrap items-center gap-x-3 font-mono text-sm text-foreground/50">
+            <a href={`/years/${releaseYear}/`} class="hover:text-accent transition-colors">{releaseYear}</a>
+            {label && (
+              <span class="text-foreground/30">·</span>
+              <a href={`/labels/${slugifyStr(label)}/`} class="hover:text-accent transition-colors">{label}</a>
+            )}
+          </div>
         </div>
 
         <div class="flex flex-wrap gap-2">
