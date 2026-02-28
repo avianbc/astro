@@ -43,6 +43,13 @@ collections:
         hint: "Pick from existing genres or type a new one. Use Title Case (e.g. 'Post-Punk', 'Jazz Rap')."
         field: { label: "Genre", name: "genre", widget: "string" }
       - { label: "Cover Image", name: "coverImage", widget: "image" }
+      - {
+          label: "Record Label",
+          name: "label",
+          widget: "string",
+          required: false,
+          hint: "The record label (e.g. 'Parlophone', 'Top Dawg Entertainment')",
+        }
       - label: "Reviewer"
         name: "reviewer"
         widget: "relation"

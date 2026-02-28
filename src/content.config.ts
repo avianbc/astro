@@ -32,6 +32,7 @@ const reviews = defineCollection({
     rating: z.number().min(1).max(10),
     releaseYear: z.number(),
     genre: z.array(z.string()),
+    label: z.string().optional(),
     coverImage: z.string(),
     reviewer: z.string(),
     pubDatetime: z.date(),

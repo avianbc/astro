@@ -8,6 +8,7 @@ genre:
   - Jazz Rap
   - Funk
   - Neo-Soul
+label: Top Dawg Entertainment
 coverImage: https://upload.wikimedia.org/wikipedia/en/f/f6/Kendrick_Lamar_-_To_Pimp_a_Butterfly.png
 reviewer: avian
 pubDatetime: 2025-02-01T10:00:00Z

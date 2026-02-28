@@ -4,6 +4,7 @@ artist: "Radiohead"
 rating: 10
 releaseYear: 2000
 genre: ["Art Rock", "Electronic", "Experimental"]
+label: "Parlophone"
 coverImage: "https://upload.wikimedia.org/wikipedia/en/0/02/Radioheadkida.png"
 reviewer: "avian"
 pubDatetime: 2025-01-15T10:00:00Z
